@@ -2,121 +2,799 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Autoavaliação PPCI | Vistoria do Corpo de Bombeiros</title>
-  <meta name="description" content="Autoavaliação rápida (2 minutos) para síndicos e administradores: descubra se seu prédio passaria numa vistoria e agende uma visita técnica preventiva." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapinel Engenharia & Consultoria | AVCB • CLCB • PPCI</title>
+  <meta name="description" content="Regularize AVCB/CLCB e PPCI com segurança e agilidade. Projetos, vistorias, laudos e consultoria em prevenção e combate a incêndio para condomínios e empresas." />
 
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#111111;
-      --muted:#5a5a5a;
-      --line:#e5e5e5;
-      --accent:#B11226;
-      --cta:#111111;
-      --ctaText:#ffffff;
-      --chip:#f7f7f7;
-      --focus:rgba(177,18,38,.18);
+      --bg:#070506;
+      --bg2:#0d0709;
+      --card: rgba(255,255,255,.06);
+      --line: rgba(255,255,255,.12);
+      --text:#fff3f5;
+      --muted: rgba(255,255,255,.72);
+      --brand:#8b2f2f;      /* terracota/vinho queimado */
+      --brand2:#c15555;
+      --ok:#4ee3a0;
+      --warn:#ffcc66;
+      --shadow: 0 24px 90px rgba(0,0,0,.58);
+      --r: 22px;
+      --max: 1180px;
     }
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background:var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", sans-serif;
       color:var(--text);
-      line-height:1.5;
+      background:
+        radial-gradient(920px 500px at 10% -10%, rgba(193,85,85,.38), transparent 60%),
+        radial-gradient(900px 540px at 92% 8%, rgba(139,47,47,.30), transparent 58%),
+        radial-gradient(520px 380px at 50% 108%, rgba(255,255,255,.07), transparent 60%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg2) 55%, var(--bg) 100%);
+      overflow-x:hidden;
+      line-height:1.45;
     }
-    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 64px}
-    h1{font-size:clamp(28px,3.2vw,44px);line-height:1.1}
-    .accent{color:var(--accent);font-weight:800}
-    .card{border:1px solid var(--line);border-radius:18px;padding:18px}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-    @media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .btn{padding:14px;border-radius:14px;font-weight:800;border:none;cursor:pointer}
-    .btn-primary{background:var(--cta);color:var(--ctaText)}
-    .opt{border:1px solid var(--line);padding:10px 12px;border-radius:12px;cursor:pointer}
-    .result{display:none;margin-top:14px}
-    .result.show{display:block}
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 18px}
+
+    /* Subtle animated glow */
+    .glow{
+      position:fixed; inset:-30%;
+      background:
+        radial-gradient(600px 420px at 20% 20%, rgba(193,85,85,.14), transparent 60%),
+        radial-gradient(520px 380px at 80% 30%, rgba(139,47,47,.12), transparent 60%),
+        radial-gradient(520px 420px at 50% 90%, rgba(255,255,255,.06), transparent 60%);
+      filter: blur(2px);
+      pointer-events:none;
+      animation: drift 12s ease-in-out infinite alternate;
+      opacity:.85;
+      z-index:-1;
+    }
+    @keyframes drift{
+      from{transform:translate3d(-10px,-10px,0) scale(1)}
+      to{transform:translate3d(14px,12px,0) scale(1.02)}
+    }
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:60;
+      backdrop-filter: blur(12px);
+      background: rgba(7,5,6,.68);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+      padding:14px 0;
+    }
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{
+      width:44px; height:44px; border-radius:16px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 18px 56px rgba(139,47,47,.28);
+      display:grid; place-items:center;
+    }
+    .brand h1{
+      margin:0;
+      font-size:13px; letter-spacing:.14em; text-transform:uppercase;
+    }
+    .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+    nav.menu{display:flex; gap:14px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
+    nav.menu a{
+      font-size:13px; color:rgba(255,255,255,.84);
+      padding:8px 10px; border-radius:12px; border:1px solid transparent;
+    }
+    nav.menu a:hover{border-color:var(--line); background:rgba(255,255,255,.04)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:10px 14px; border-radius:14px;
+      font-weight:900; font-size:13px;
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 18px 56px rgba(139,47,47,.25);
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{filter:brightness(1.06)}
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      box-shadow:none;
+      color:rgba(255,255,255,.92);
+    }
+    .btn.small{padding:9px 12px; border-radius:12px}
+
+    /* Hero */
+    .hero{padding:56px 0 26px; position:relative}
+    .heroGrid{display:grid; grid-template-columns:1.15fr .85fr; gap:18px; align-items:stretch}
+    .kicker{
+      display:inline-flex; gap:10px; align-items:center;
+      padding:8px 12px; border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      color: rgba(255,255,255,.86);
+      font-size:12px;
+      margin-bottom:14px;
+    }
+    .dot{width:8px; height:8px; border-radius:99px; background:var(--ok); box-shadow:0 0 0 6px rgba(78,227,160,.12)}
+    .hero h2{
+      margin:0 0 10px;
+      font-size:46px; line-height:1.04; letter-spacing:-.02em;
+    }
+    .hero h2 strong{color:#fff}
+    .hero p{margin:0 0 18px; color:var(--muted); font-size:16px; max-width:62ch}
+    .ctaRow{display:flex; gap:12px; flex-wrap:wrap; margin-top:12px}
+    .metrics{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px}
+    .metric{
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px 12px;
+      font-size:12px; color:rgba(255,255,255,.86);
+    }
+    .metric b{display:block; font-size:15px; margin-bottom:2px}
+
+    /* Common cards */
+    section{padding:44px 0}
+    .sectionTitle{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:14px; margin-bottom:16px; flex-wrap:wrap;
+    }
+    .sectionTitle h3{margin:0; font-size:22px}
+    .sectionTitle p{margin:0; color:var(--muted); font-size:13px}
+    .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+    .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+    .card{
+      background: var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card.soft{box-shadow: 0 18px 60px rgba(0,0,0,.36)}
+    .card h4{margin:0 0 6px; font-size:15px}
+    .card p{margin:0; color:var(--muted); font-size:13px}
+    .icon{
+      width:42px; height:42px; border-radius:16px;
+      display:grid; place-items:center;
+      background: rgba(139,47,47,.22);
+      border:1px solid rgba(255,255,255,.14);
+      margin-bottom:12px;
+      font-size:18px;
+    }
+    .tagRow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      font-size:12px; color:rgba(255,255,255,.86);
+    }
+
+    /* Process */
+    .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+    .step{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: var(--r);
+      padding:14px;
+    }
+    .step b{display:block; margin-bottom:6px}
+    .step span{color:var(--muted); font-size:13px}
+
+    /* Band */
+    .band{
+      display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+      background: linear-gradient(135deg, rgba(139,47,47,.52), rgba(193,85,85,.14));
+      border:1px solid rgba(255,255,255,.16);
+      border-radius: calc(var(--r) + 6px);
+      padding:18px;
+      box-shadow: var(--shadow);
+    }
+    .band h3{margin:0; font-size:18px}
+    .band p{margin:4px 0 0; color:rgba(255,255,255,.82); font-size:13px}
+
+    /* Diagnosis */
+    .diag{display:grid; grid-template-columns:1.05fr .95fr; gap:14px; align-items:stretch}
+    .field{
+      display:grid; gap:8px;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      background: rgba(255,255,255,.03);
+    }
+    .field label{font-size:12px; color:rgba(255,255,255,.9); font-weight:900}
+    input, select, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+      font: inherit;
+    }
+    textarea{resize:vertical}
+    .hint{color:var(--muted); font-size:12px; margin-top:8px}
+
+    /* Testimonials */
+    .quote{
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      background: rgba(255,255,255,.03);
+      padding:16px;
+    }
+    .quote p{margin:0; color:rgba(255,255,255,.82); font-size:13px}
+    .quote b{display:block; margin-top:10px; color:rgba(255,255,255,.92); font-size:12px}
+    .stars{letter-spacing:.12em; color:rgba(255,255,255,.85); font-size:12px; margin-bottom:8px}
+
+    /* FAQ */
+    details{
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      padding:14px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.35);
+    }
+    details summary{cursor:pointer; font-weight:900; list-style:none}
+    details summary::-webkit-details-marker{display:none}
+    details p{margin:10px 0 0; color:var(--muted); font-size:13px}
+
+    /* Footer */
+    footer{
+      padding:26px 0 40px;
+      border-top:1px solid var(--line);
+      color:rgba(255,255,255,.66);
+      font-size:12px;
+    }
+
+    /* Floating WhatsApp + Mobile bar */
+    .floatWA{
+      position:fixed; right:16px; bottom:78px;
+      z-index:80;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .floatWA a{
+      display:flex; align-items:center; gap:10px;
+      padding:12px 14px; border-radius:16px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(7,5,6,.74);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 22px 70px rgba(0,0,0,.55);
+      font-weight:900; font-size:13px;
+    }
+    .waIcon{
+      width:40px; height:40px; border-radius:16px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      display:grid; place-items:center;
+      font-size:16px;
+    }
+    .floatbar{
+      position:fixed; left:50%; transform:translateX(-50%);
+      bottom:14px; z-index:75;
+      display:flex; gap:10px;
+      padding:10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(7,5,6,.72);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 24px 90px rgba(0,0,0,.60);
+    }
+    .floatbar a{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 14px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      font-weight:900; font-size:13px;
+    }
+    .floatbar a.primary{
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      border-color: rgba(255,255,255,.18);
+    }
+
+    /* Reveal animation */
+    .reveal{
+      opacity:0; transform: translateY(10px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.on{opacity:1; transform: translateY(0)}
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .heroGrid{grid-template-columns:1fr}
+      .grid3{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr 1fr}
+      .diag{grid-template-columns:1fr}
+      .hero h2{font-size:38px}
+      nav.menu{display:none}
+      .floatWA{bottom:92px}
+    }
+    @media (max-width: 520px){
+      .steps{grid-template-columns:1fr}
+      .hero{padding-top:34px}
+      .floatbar{width:calc(100% - 18px)}
+      .floatbar a{flex:1; justify-content:center}
+    }
   </style>
 </head>
 
 <body>
-<div class="wrap">
+<div class="glow" aria-hidden="true"></div>
 
-<h1>Seu prédio passaria hoje numa vistoria do Corpo de Bombeiros?</h1>
-<p>
-Em menos de <span class="accent">2 minutos</span>, identifique possíveis <span class="accent">riscos</span>  
-e saiba quando faz sentido agendar uma <span class="accent">visita preventiva</span>.
-</p>
+<header>
+  <div class="wrap">
+    <div class="nav">
+      <div class="brand">
+        <div class="logo" aria-label="Logo Chapinel">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 20V10.5L12 4l8 6.5V20" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 20v-7h6v7" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <h1>CHAPINEL</h1>
+          <p>engenharia & consultoria</p>
+        </div>
+      </div>
 
-<div class="grid">
-<main class="card">
+      <nav class="menu" aria-label="Navegação">
+        <a href="#servicos">Serviços</a>
+        <a href="#opcoes">Opções</a>
+        <a href="#diagnostico">Diagnóstico</a>
+        <a href="#faq">Dúvidas</a>
+        <a class="btn ghost" href="#contato">Contato</a>
+      </nav>
 
-<form id="ppciForm">
-<p><b>Responda rapidamente:</b></p>
+      <a class="btn" href="#diagnostico">Fazer diagnóstico</a>
+    </div>
+  </div>
+</header>
 
-<p>1) O condomínio possui AVCB válido hoje?</p>
-<label class="opt"><input type="radio" name="q1" value="sim" required> Sim</label>
-<label class="opt"><input type="radio" name="q1" value="nao"> Não</label>
-<label class="opt"><input type="radio" name="q1" value="naosei"> Não sei</label>
+<main>
+  <div class="wrap">
 
-<p>2) Você sabe a data de vencimento do AVCB?</p>
-<label class="opt"><input type="radio" name="q2" value="sim" required> Sim</label>
-<label class="opt"><input type="radio" name="q2" value="nao"> Não</label>
+    <!-- HERO -->
+    <section class="hero" id="topo">
+      <div class="heroGrid">
+        <div>
+          <div class="kicker"><span class="dot"></span><span>AVCB • CLCB • PPCI • Laudos • Vistorias</span></div>
 
-<p>3) Os extintores estão dentro da validade?</p>
-<label class="opt"><input type="radio" name="q3" value="sim" required> Sim</label>
-<label class="opt"><input type="radio" name="q3" value="nao"> Não</label>
-<label class="opt"><input type="radio" name="q3" value="naosei"> Não sei</label>
+          <h2>
+            Regularizar é <strong>segurança</strong>.<br/>
+            Ignorar vira <strong>risco, multa e exposição</strong>.
+          </h2>
 
-<p>4) A iluminação de emergência funciona quando falta energia?</p>
-<label class="opt"><input type="radio" name="q4" value="sim" required> Sim</label>
-<label class="opt"><input type="radio" name="q4" value="nao"> Não</label>
-<label class="opt"><input type="radio" name="q4" value="naosei"> Não sei</label>
+          <p>
+            A Chapinel Engenharia & Consultoria orienta síndicos, gestores e empresários com clareza técnica
+            e entregas organizadas — do diagnóstico ao plano de ação.
+          </p>
 
-<p>5) As rotas de fuga estão sinalizadas e desobstruídas?</p>
-<label class="opt"><input type="radio" name="q5" value="sim" required> Sim</label>
-<label class="opt"><input type="radio" name="q5" value="nao"> Não</label>
-<label class="opt"><input type="radio" name="q5" value="naosei"> Não sei</label>
+          <div class="ctaRow">
+            <a class="btn" href="#diagnostico">Quero diagnóstico agora</a>
+            <a class="btn ghost" href="#servicos">Ver serviços</a>
+            <a class="btn ghost" href="#opcoes">Ver opções</a>
+          </div>
 
-<p>6) O prédio passou por vistoria nos últimos 12 meses?</p>
-<label class="opt"><input type="radio" name="q6" value="sim" required> Sim</label>
-<label class="opt"><input type="radio" name="q6" value="nao"> Não</label>
-<label class="opt"><input type="radio" name="q6" value="naosei"> Não sei</label>
+          <div class="metrics">
+            <div class="metric"><b>✅ Diagnóstico</b> rápido e objetivo</div>
+            <div class="metric"><b>📄 Entrega</b> organizada (evidências)</div>
+            <div class="metric"><b>🧯 Foco</b> em aprovação e segurança</div>
+          </div>
 
-<br><br>
-<button class="btn btn-primary" type="submit">Ver meu resultado</button>
+          <div class="tagRow" style="margin-top:14px">
+            <span class="tag">Condomínios</span>
+            <span class="tag">Comércio</span>
+            <span class="tag">Indústria</span>
+            <span class="tag">Clínicas</span>
+            <span class="tag">Escolas</span>
+          </div>
+        </div>
 
-<div class="result" id="resultBox">
-<p id="resultText"></p>
-</div>
-</form>
+        <aside class="card soft reveal" aria-label="Resumo premium">
+          <h4 style="margin-top:0">O que você ganha aqui</h4>
+          <p>Um caminho claro pra regularizar: o que está faltando, o que é crítico e como resolver com menos retrabalho.</p>
 
+          <div style="height:12px"></div>
+
+          <div class="grid2">
+            <div class="field">
+              <label>Você recebe</label>
+              <div class="hint">
+                ✅ checklist do que reprova<br/>
+                ✅ prioridades (crítico x ajustável)<br/>
+                ✅ plano de ação + documentação
+              </div>
+            </div>
+            <div class="field">
+              <label>Ideal para</label>
+              <div class="hint">
+                síndicos • gestores • empresários<br/>
+                quem quer evitar multa/reprovação<br/>
+                quem precisa “arrumar a casa”
+              </div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="band">
+            <div>
+              <h3 style="margin:0">Quer saber seu risco hoje?</h3>
+              <p style="margin:4px 0 0">Responda 3 passos e envie no WhatsApp.</p>
+            </div>
+            <a class="btn small" href="#diagnostico">Começar</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SERVIÇOS -->
+    <section id="servicos">
+      <div class="sectionTitle">
+        <div>
+          <h3>Serviços</h3>
+          <p>Escolha o que você precisa — ou faça o diagnóstico e eu te digo o melhor caminho.</p>
+        </div>
+        <a class="btn ghost" href="#diagnostico">Fazer diagnóstico</a>
+      </div>
+
+      <div class="grid3">
+        <div class="card reveal">
+          <div class="icon">🧾</div>
+          <h4>Renovação AVCB / CLCB</h4>
+          <p>Checklist, orientação de adequações e organização de documentos para evitar reprovação e retrabalho.</p>
+          <div class="tagRow">
+            <span class="tag">Condomínios</span><span class="tag">Empresas</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon">🧯</div>
+          <h4>PPCI / Projetos</h4>
+          <p>Projeto técnico: rotas, sinalização, equipamentos, dimensionamento e conformidade conforme ocupação.</p>
+          <div class="tagRow">
+            <span class="tag">PPCI</span><span class="tag">Adequações</span>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="icon">🔎</div>
+          <h4>Vistorias e Laudos</h4>
+          <p>Relatório objetivo: situação atual, riscos, prioridades e plano de ação para síndicos e gestores.</p>
+          <div class="tagRow">
+            <span class="tag">Relatório</span><span class="tag">Prioridades</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:14px"></div>
+      <div class="band reveal">
+        <div>
+          <h3>Não sabe se é AVCB, CLCB ou PPCI?</h3>
+          <p>Sem problema. Faz o diagnóstico e eu te digo o caminho certo.</p>
+        </div>
+        <a class="btn" href="#diagnostico">Fazer diagnóstico</a>
+      </div>
+    </section>
+
+    <!-- OPÇÕES / PACOTES -->
+    <section id="opcoes">
+      <div class="sectionTitle">
+        <div>
+          <h3>Opções (o que você pode pedir)</h3>
+          <p>Mais opções, sem complicar: escolha o objetivo e eu retorno com o melhor plano.</p>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="card reveal">
+          <div class="icon">⚡</div>
+          <h4>Diagnóstico express</h4>
+          <p>Ideal pra entender o cenário atual e saber “o que falta” antes de gastar errado.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon">🧩</div>
+          <h4>Plano de regularização</h4>
+          <p>Prioridades + sequência correta de adequações + evidências. Menos retrabalho e mais clareza.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon">🧾</div>
+          <h4>Organização documental</h4>
+          <p>Montagem e organização dos documentos e evidências para gestão e fiscalização.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon">🏢</div>
+          <h4>Condomínios</h4>
+          <p>Foco em rotina do síndico: prazos, manutenção, evidências e conformidade contínua.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon">🏪</div>
+          <h4>Comércio / Operação</h4>
+          <p>Foco em evitar impeditivos: o que bloqueia funcionamento, o que multa e o que reprova.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon">🎓</div>
+          <h4>Treinamentos</h4>
+          <p>Brigada/rotinas e boas práticas — sob análise do caso e necessidade do local.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESSO -->
+    <section id="processo">
+      <div class="sectionTitle">
+        <div>
+          <h3>Como funciona</h3>
+          <p>Você sabe exatamente o que está contratando — sem surpresas.</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step reveal"><b>1) Diagnóstico</b><span>Entendemos o tipo de imóvel e a situação atual.</span></div>
+        <div class="step reveal"><b>2) Checklist</b><span>O que reprova, o que é crítico e o que dá pra resolver primeiro.</span></div>
+        <div class="step reveal"><b>3) Plano de ação</b><span>Orientação clara do caminho + documentação necessária.</span></div>
+        <div class="step reveal"><b>4) Entrega</b><span>Evidências organizadas para auditoria/fiscalização.</span></div>
+      </div>
+    </section>
+
+    <!-- DIAGNÓSTICO -->
+    <section id="diagnostico">
+      <div class="sectionTitle">
+        <div>
+          <h3>Diagnóstico rápido (3 passos)</h3>
+          <p>Preencha e clique em enviar — a mensagem vai pronta pro seu WhatsApp.</p>
+        </div>
+      </div>
+
+      <div class="diag">
+        <div class="card reveal">
+          <h4 style="margin-top:0">Envie seu diagnóstico</h4>
+          <p class="hint">Dica: informe tipo de imóvel, cidade e status do AVCB/CLCB.</p>
+
+          <form onsubmit="return sendWhatsApp(event)" style="display:grid; gap:10px; margin-top:12px;">
+            <input id="nome" placeholder="Seu nome" required />
+            <input id="empresa" placeholder="Empresa / Condomínio (opcional)" />
+            <input id="cidade" placeholder="Cidade/UF (ex: Natal/RN)" required />
+
+            <select id="tipo" required>
+              <option value="" disabled selected>Tipo de imóvel</option>
+              <option>Condomínio residencial</option>
+              <option>Condomínio comercial</option>
+              <option>Comércio / Loja</option>
+              <option>Empresa / Indústria</option>
+              <option>Shopping / Centro comercial</option>
+              <option>Escola / Clínica / Hospital</option>
+              <option>Outro</option>
+            </select>
+
+            <select id="status" required>
+              <option value="" disabled selected>Status AVCB/CLCB</option>
+              <option>Vencido</option>
+              <option>Próximo de vencer</option>
+              <option>Não tenho / nunca emiti</option>
+              <option>Quero revisar conformidade</option>
+            </select>
+
+            <select id="prazo" required>
+              <option value="" disabled selected>Prazo / urgência</option>
+              <option>Até 7 dias</option>
+              <option>Até 30 dias</option>
+              <option>Sem prazo, quero organizar</option>
+            </select>
+
+            <textarea id="msg" rows="4" placeholder="Conte em 1–2 linhas (ex: vistoria reprovou, pendências, prazo, bombeiros...)" ></textarea>
+
+            <button class="btn" type="submit" style="border:none;">Enviar no WhatsApp</button>
+            <div class="hint">Ao enviar, abre o WhatsApp com a mensagem pronta.</div>
+          </form>
+        </div>
+
+        <div class="card reveal">
+          <h4 style="margin-top:0">O que mais reprova (checklist)</h4>
+          <p class="hint">Se você marcou 2+ itens, vale pedir diagnóstico.</p>
+
+          <div class="grid2" style="margin-top:12px">
+            <div class="field">
+              <label>Infra / operação</label>
+              <div class="hint">
+                • rota de fuga obstruída<br/>
+                • sinalização fraca/ausente<br/>
+                • iluminação de emergência<br/>
+                • extintores/manutenção<br/>
+                • portas corta-fogo / acessos
+              </div>
+            </div>
+            <div class="field">
+              <label>Documentação</label>
+              <div class="hint">
+                • documentos inconsistentes<br/>
+                • divergência com projeto<br/>
+                • falta de registros/manutenções<br/>
+                • evidências incompletas<br/>
+                • laudos desatualizados
+              </div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+          <div class="band">
+            <div>
+              <h3 style="margin:0">Quer análise do seu caso?</h3>
+              <p style="margin:4px 0 0">Envie o diagnóstico e eu retorno com próximos passos.</p>
+            </div>
+            <a class="btn small" href="#diagnostico">Enviar</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEPOIMENTOS (placeholders — você pode trocar depois) -->
+    <section id="depoimentos">
+      <div class="sectionTitle">
+        <div>
+          <h3>Depoimentos</h3>
+          <p>Você pode substituir pelos seus reais quando quiser.</p>
+        </div>
+      </div>
+
+      <div class="grid3">
+        <div class="quote reveal">
+          <div class="stars">★★★★★</div>
+          <p>“A orientação foi direta e resolveu o que estava travando a renovação. Documentação bem organizada.”</p>
+          <b>— Síndico (Condomínio residencial)</b>
+        </div>
+        <div class="quote reveal">
+          <div class="stars">★★★★★</div>
+          <p>“Finalmente entendi o que era crítico e o que era ajuste. Economizou tempo e retrabalho.”</p>
+          <b>— Gestor (Comércio)</b>
+        </div>
+        <div class="quote reveal">
+          <div class="stars">★★★★★</div>
+          <p>“Processo claro, passo a passo e com foco em conformidade. Atendimento excelente.”</p>
+          <b>— Empresário (Empresa)</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="sectionTitle">
+        <div>
+          <h3>Dúvidas frequentes</h3>
+          <p>Respostas diretas para decisão rápida.</p>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <details class="reveal">
+          <summary>AVCB vencido: de quem é a responsabilidade?</summary>
+          <p>Em geral, recai sobre a gestão do local (condomínio/empresa). Além de multas e impedimentos, há exposição em caso de sinistro. Trate como gestão de risco.</p>
+        </details>
+        <details class="reveal">
+          <summary>CLCB é “mais simples” que AVCB?</summary>
+          <p>Depende do enquadramento e ocupação. Mesmo processos mais diretos exigem conformidade e evidências — erro pequeno vira retrabalho.</p>
+        </details>
+        <details class="reveal">
+          <summary>O que mais reprova renovação?</summary>
+          <p>Divergência entre o que existe no local e o que está no projeto, documentação inconsistente, manutenção deficiente, sinalização/rotas comprometidas e falta de evidências.</p>
+        </details>
+        <details class="reveal">
+          <summary>Atende Natal/RN e região?</summary>
+          <p>Sim. E também avaliamos casos em outras localidades, conforme o tipo de demanda e necessidade técnica.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato">
+      <div class="sectionTitle">
+        <div>
+          <h3>Contato</h3>
+          <p>WhatsApp e e-mail para decisões rápidas.</p>
+        </div>
+      </div>
+
+      <div class="band reveal">
+        <div>
+          <h3 style="margin:0">CHAPINEL engenharia & consultoria</h3>
+          <p style="margin:4px 0 0">Prevenção e combate a incêndio • AVCB/CLCB • PPCI • Laudos • Vistorias</p>
+          <p style="margin:10px 0 0; color:rgba(255,255,255,.86)">
+            <b>📞 WhatsApp:</b> (84) 98732-4575<br/>
+            <b>📧 E-mail:</b> chapinelengenharia@gmail.com<br/>
+            <b>📍 Cidade base:</b> Natal/RN
+          </p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn" href="#diagnostico">Fazer diagnóstico</a>
+          <a class="btn ghost" href="#" onclick="openWhatsApp(); return false;">Chamar no WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <div style="display:flex; gap:12px; justify-content:space-between; flex-wrap:wrap">
+          <div>
+            <b>CHAPINEL</b> engenharia & consultoria<br/>
+            <span style="color:rgba(255,255,255,.60)">AVCB • CLCB • PPCI • Laudos • Consultoria</span>
+          </div>
+          <div style="color:rgba(255,255,255,.60)">
+            © <span id="year"></span> Chapinel. Todos os direitos reservados.
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
 </main>
 
-<aside class="card">
-<h3>Agende uma visita técnica preventiva</h3>
-<p>Confirme o que realmente precisa ser ajustado antes de qualquer vistoria.</p>
-<a class="btn btn-primary" href="https://wa.me/5584987324575?text=Olá!%20Preenchi%20a%20autoavaliação%20de%20PPCI%20e%20quero%20agendar%20uma%20visita%20técnica%20preventiva." target="_blank">
-Agendar pelo WhatsApp
-</a>
-<p style="margin-top:10px;font-size:13px">
-Ou envie um e-mail:  
-<a href="mailto:chapinelengenharia@gmail.com">chapinelengenharia@gmail.com</a>
-</p>
-</aside>
+<!-- Floating WhatsApp -->
+<div class="floatWA" aria-label="WhatsApp">
+  <a href="#" onclick="openWhatsApp(); return false;" title="Chamar no WhatsApp">
+    <span class="waIcon">💬</span>
+    Chamar no WhatsApp
+  </a>
+</div>
 
+<!-- Mobile bar -->
+<div class="floatbar" aria-label="Atalhos">
+  <a class="primary" href="#diagnostico">📲 Diagnóstico</a>
+  <a href="#servicos">🧯 Serviços</a>
 </div>
 
 <script>
-document.getElementById("ppciForm").addEventListener("submit", function(e){
-  e.preventDefault();
-  document.getElementById("resultText").innerHTML =
-    "Com base nas respostas, é recomendado uma <b class='accent'>visita técnica preventiva</b> para evitar surpresas em vistoria.";
-  document.getElementById("resultBox").classList.add("show");
-});
-</script>
+  // Ano
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-</div>
+  // WhatsApp (já configurado)
+  const WHATSAPP_PHONE = "5584987324575";
+
+  function openWhatsApp(){
+    const text = "Olá, Chapinel! Quero um diagnóstico para AVCB/CLCB/PPCI. Pode me orientar?";
+    const url = "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(text);
+    window.open(url, "_blank");
+  }
+
+  function sendWhatsApp(ev){
+    ev.preventDefault();
+
+    const nome = (document.getElementById("nome").value || "").trim();
+    const empresa = (document.getElementById("empresa").value || "").trim();
+    const cidade = (document.getElementById("cidade").value || "").trim();
+    const tipo = document.getElementById("tipo").value;
+    const status = document.getElementById("status").value;
+    const prazo = document.getElementById("prazo").value;
+    const msg = (document.getElementById("msg").value || "").trim();
+
+    const text =
+`Olá, Chapinel! Meu nome é ${nome}.
+Empresa/Condomínio: ${empresa || "—"}
+Cidade/UF: ${cidade}
+Tipo de imóvel: ${tipo}
+Status AVCB/CLCB: ${status}
+Prazo/urgência: ${prazo}
+
+Resumo: ${msg || "Quero um diagnóstico inicial e próximos passos."}`;
+
+    const url = "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(text);
+    window.open(url, "_blank");
+    return false;
+  }
+
+  // Reveal animation on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting) e.target.classList.add("on");
+    });
+  }, {threshold:.12});
+
+  document.querySelectorAll(".reveal").forEach(el=> io.observe(el));
+</script>
 </body>
 </html>
+
