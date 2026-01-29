@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Autoavaliação PPCI | Vistoria do Corpo de Bombeiros</title>
+  <meta name="description" content="Autoavaliação rápida (2 minutos) para síndicos e administradores: descubra se seu prédio passaria numa vistoria e agende uma visita técnica preventiva." />
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#111111;
+      --muted:#5a5a5a;
+      --line:#e5e5e5;
+      --accent:#B11226;
+      --cta:#111111;
+      --ctaText:#ffffff;
+      --chip:#f7f7f7;
+      --focus:rgba(177,18,38,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:28px 18px 64px}
+    h1{font-size:clamp(28px,3.2vw,44px);line-height:1.1}
+    .accent{color:var(--accent);font-weight:800}
+    .card{border:1px solid var(--line);border-radius:18px;padding:18px}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}}
+    .btn{padding:14px;border-radius:14px;font-weight:800;border:none;cursor:pointer}
+    .btn-primary{background:var(--cta);color:var(--ctaText)}
+    .opt{border:1px solid var(--line);padding:10px 12px;border-radius:12px;cursor:pointer}
+    .result{display:none;margin-top:14px}
+    .result.show{display:block}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h1>Seu prédio passaria hoje numa vistoria do Corpo de Bombeiros?</h1>
+<p>
+Em menos de <span class="accent">2 minutos</span>, identifique possíveis <span class="accent">riscos</span>  
+e saiba quando faz sentido agendar uma <span class="accent">visita preventiva</span>.
+</p>
+
+<div class="grid">
+<main class="card">
+
+<form id="ppciForm">
+<p><b>Responda rapidamente:</b></p>
+
+<p>1) O condomínio possui AVCB válido hoje?</p>
+<label class="opt"><input type="radio" name="q1" value="sim" required> Sim</label>
+<label class="opt"><input type="radio" name="q1" value="nao"> Não</label>
+<label class="opt"><input type="radio" name="q1" value="naosei"> Não sei</label>
+
+<p>2) Você sabe a data de vencimento do AVCB?</p>
+<label class="opt"><input type="radio" name="q2" value="sim" required> Sim</label>
+<label class="opt"><input type="radio" name="q2" value="nao"> Não</label>
+
+<p>3) Os extintores estão dentro da validade?</p>
+<label class="opt"><input type="radio" name="q3" value="sim" required> Sim</label>
+<label class="opt"><input type="radio" name="q3" value="nao"> Não</label>
+<label class="opt"><input type="radio" name="q3" value="naosei"> Não sei</label>
+
+<p>4) A iluminação de emergência funciona quando falta energia?</p>
+<label class="opt"><input type="radio" name="q4" value="sim" required> Sim</label>
+<label class="opt"><input type="radio" name="q4" value="nao"> Não</label>
+<label class="opt"><input type="radio" name="q4" value="naosei"> Não sei</label>
+
+<p>5) As rotas de fuga estão sinalizadas e desobstruídas?</p>
+<label class="opt"><input type="radio" name="q5" value="sim" required> Sim</label>
+<label class="opt"><input type="radio" name="q5" value="nao"> Não</label>
+<label class="opt"><input type="radio" name="q5" value="naosei"> Não sei</label>
+
+<p>6) O prédio passou por vistoria nos últimos 12 meses?</p>
+<label class="opt"><input type="radio" name="q6" value="sim" required> Sim</label>
+<label class="opt"><input type="radio" name="q6" value="nao"> Não</label>
+<label class="opt"><input type="radio" name="q6" value="naosei"> Não sei</label>
+
+<br><br>
+<button class="btn btn-primary" type="submit">Ver meu resultado</button>
+
+<div class="result" id="resultBox">
+<p id="resultText"></p>
+</div>
+</form>
+
+</main>
+
+<aside class="card">
+<h3>Agende uma visita técnica preventiva</h3>
+<p>Confirme o que realmente precisa ser ajustado antes de qualquer vistoria.</p>
+<a class="btn btn-primary" href="https://wa.me/5584987324575?text=Olá!%20Preenchi%20a%20autoavaliação%20de%20PPCI%20e%20quero%20agendar%20uma%20visita%20técnica%20preventiva." target="_blank">
+Agendar pelo WhatsApp
+</a>
+<p style="margin-top:10px;font-size:13px">
+Ou envie um e-mail:  
+<a href="mailto:chapinelengenharia@gmail.com">chapinelengenharia@gmail.com</a>
+</p>
+</aside>
+
+</div>
+
+<script>
+document.getElementById("ppciForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  document.getElementById("resultText").innerHTML =
+    "Com base nas respostas, é recomendado uma <b class='accent'>visita técnica preventiva</b> para evitar surpresas em vistoria.";
+  document.getElementById("resultBox").classList.add("show");
+});
+</script>
+
+</div>
+</body>
+</html>
